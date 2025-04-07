@@ -51,10 +51,10 @@ A simple E-commerce web application with full CRUD functionality for managing us
 2. **Set up .env file at the root of the project with the following variables:**
 
    ```bash
-ADMIN_PASSWORD=your_admin_password_here
-JWT_ADMIN_SECRET_KEY=your_jwt_admin_secret_key_here
-EMAIL=your_email_here@gmail.com
-PASSWORD="your_email_app_password_here"
+    ADMIN_PASSWORD=your_admin_password_here
+    JWT_ADMIN_SECRET_KEY=your_jwt_admin_secret_key_here
+    EMAIL=your_email_here@gmail.com
+    PASSWORD="your_email_app_password_here"
     ```
 
 3. **Start XAMPP and make sure Apache and MySQL are running.**
@@ -73,9 +73,9 @@ Uses Gmail SMTP via PHPMailer or mail() for:
 Make sure to enable "Less secure app access" or use an App Password if you have 2FA enabled on Gmail.
 
 ## 👨‍💻 Author
-Developed by Phạm Chí VỹVỹ
-Student at Hanoi University of Science and Technology
-Electronics and Telecommunication Engineering
+- Developed by Phạm Chí Vỹ
+- Student at Hanoi University of Science and Technology
+- Electronics and Telecommunication Engineering
 
 📌 Preview
 
