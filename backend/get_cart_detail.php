@@ -16,11 +16,11 @@
     $user_id = $_SESSION['user_id'];
 
     // Lấy danh sách đơn hàng của người dùng
-    $sql = "SELECT o.id AS order_id, p.name, od.quantity, od.price, (od.quantity * od.price) AS total
-            FROM orders o
-            JOIN order_details od ON o.id = od.order_id
-            JOIN products p ON od.product_id = p.id
-            WHERE o.user_id = ?";
+    $sql = "SELECT o.id AS order_id, p.name, od.quantity, od.price, (od.quantity * od.price) AS total, od.status
+        FROM orders o
+        JOIN order_details od ON o.id = od.order_id
+        JOIN products p ON od.product_id = p.id
+        WHERE o.user_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();

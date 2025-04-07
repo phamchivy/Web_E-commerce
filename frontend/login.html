@@ -77,6 +77,12 @@
                                             console.error('Error:', error);
                                         });
                                 });
+                                window.addEventListener('pageshow', function (event) {
+                                    if (event.persisted) {
+                                        // Nếu trang được lấy từ cache (khi back lại)
+                                        window.location.reload(); // Tải lại trang
+                                    }
+                                });
                             </script>
                             <script>
                                 document.getElementById('loginForm').addEventListener('submit', function (event) {
@@ -100,13 +106,13 @@
                                             }
                                         })
                                         .catch(error => {
-                                            //console.error('Error:', error);
+                                            //console.log('Error:', error.message);
                                             document.getElementById('error-message').textContent = 'An error occurred. Please try again later.';
                                         });
                                 });
 
                             </script>
-                            
+
                             <!--
                             <script>
                                 // JavaScript để xử lý thông báo lỗi nếu cần

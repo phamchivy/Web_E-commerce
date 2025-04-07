@@ -71,6 +71,31 @@
             <script>
                 $(document).ready(function () {
                     $.ajax({
+                        url: '../backend/check_session.php', // A simple endpoint to check session
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.error) {
+                                alert(data.error);
+                                window.location.href = '../frontend/login.html'; // Redirect to login if not authenticated
+                            } else {
+                                // User is authenticated, proceed to load products
+                                //loadProducts();
+                                alert("Success. Render product.");
+                            }
+                        },
+                        error: function () {
+                            alert('Failed to validate session.');
+                            window.location.href = '../frontend/login.html';
+                        }
+                    });
+                    window.addEventListener('pageshow', function (event) {
+                                    if (event.persisted) {
+                                        // Nếu trang được lấy từ cache (khi back lại)
+                                        window.location.reload(); // Tải lại trang
+                                    }
+                                });
+                    $.ajax({
                         url: '../backend/_product.php',
                         method: 'GET',
                         dataType: 'json',

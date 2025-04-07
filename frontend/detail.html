@@ -106,7 +106,7 @@ $(document).ready(function(){
         var formData = $("#add-to-cart-form").serialize();
         $.ajax({
             type: "POST",
-            url: "../backend/confirm_order.php",
+            url: "../backend/add_orders.php",
             data: formData,
             success: function(response) {
                 $("#cart-message").html("<div class='alert alert-success'>Product added to cart successfully.</div>");

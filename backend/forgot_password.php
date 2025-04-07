@@ -1,12 +1,19 @@
 <?php
     include 'db_connect.php';
     //ini_set('session.gc_maxlifetime', 60);
+    require __DIR__ . '/../vendor/autoload.php';
+    use Firebase\JWT\JWT; // Nạp lớp JWT từ thư viện Firebase
+    use Dotenv\Dotenv;
+    use Firebase\JWT\Key;
     session_start();
 
-    require '../vendor/autoload.php'; // Điều chỉnh đường dẫn nếu cần
+    //require '../vendor/autoload.php'; // Điều chỉnh đường dẫn nếu cần
 
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
+
+    $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->load();
     
     // Khởi tạo PHPMailer
     $mail = new PHPMailer(true);
@@ -44,8 +51,8 @@
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com'; // Máy chủ SMTP của Gmail
                 $mail->SMTPAuth   = true;
-                $mail->Username   = 'chivy20033012@gmail.com'; // Thay đổi với địa chỉ email của bạn
-                $mail->Password   = 'tkpv lyep kcrl mmsd'; // Thay đổi với mật khẩu ứng dụng của bạn
+                $mail->Username   = $_ENV['EMAIL']; // Thay đổi với địa chỉ email của bạn
+                $mail->Password   = $_ENV['PASSWORD']; // Thay đổi với mật khẩu ứng dụng của bạn
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
             

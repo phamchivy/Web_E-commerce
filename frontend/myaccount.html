@@ -21,7 +21,7 @@
                     class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto text-uppercase">
-                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onClick="handleLogout()">Logout</a></li>
                     <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
@@ -29,9 +29,21 @@
             </div>
         </div>
     </nav>
+    <script>
+        function handleLogout() {
+            // Hiển thị prompt xác nhận
+            if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+                // Nếu người dùng chọn "OK", chuyển hướng đến trang đăng xuất
+                window.location.href = 'login.html'; // Thay bằng URL của trang xử lý đăng xuất
+            } else {
+                // Nếu người dùng chọn "Cancel", không làm gì cả
+                return false;
+            }
+        }
+    </script>
     <header class="masthead" style="background-image:url('assets/img/header-bg.jpg');">
-
     </header>
+
     <section class="bg-light" id="portfolio">
         <div class="container mt-5">
             <h1>Your Cart</h1>
@@ -42,6 +54,7 @@
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Total</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="cart-items">
@@ -74,6 +87,7 @@
                             cartItemsHtml += '<td>' + item.quantity + '</td>';
                             cartItemsHtml += '<td>$' + item.price + '</td>';
                             cartItemsHtml += '<td>$' + item.total + '</td>';
+                            cartItemsHtml += '<td>' + item.status + '</td>';
                             cartItemsHtml += '<td>';
                             cartItemsHtml += '<button style="margin-right: 15px" class="btn btn-warning btn-edit" data-id="' + item.order_id + '" data-price="' + item.price + '">Edit</button> ';
                             cartItemsHtml += '<button class="btn btn-danger btn-delete" data-id="' + item.order_id + '">Delete</button>';
@@ -143,31 +157,143 @@
                     }
                 });
             }
+        });        
+    </script>
+    <div id="orderPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopup">&times;</span>
+            <h2>Order Confirmation</h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            <label for="address">Address:</label>
+            <input type="text" id="address" required>
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" required>
+            <button id="submitOrder">Submit</button>
+        </div>
+    </div>
+    <style>
+        .popup {
+            display: none;
+            /* Ẩn pop-up ban đầu */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Màu nền mờ */
+        }
+
+        .popup-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            /* Chiều rộng của pop-up */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        document.getElementById("confirm-order").addEventListener("click", function () {
+            // Lấy phần tử HTML chứa giá trị
+            const cartValueText = document.getElementById('total-cart-value').innerText;
+
+            // Sử dụng biểu thức chính quy để tìm và lấy số
+            const totalCartValue = parseFloat(cartValueText.replace(/[^0-9.-]+/g, ''));
+
+            if (!totalCartValue) {
+                $("#order-message").html("<div class='alert alert-danger'>You haven't order yet.</div>");
+                setTimeout(function () {
+                    $(".alert").hide();
+                }, 1500);
+            }
+            else {
+                document.getElementById("orderPopup").style.display = "block"; // Hiển thị pop-up
+            }
         });
 
+        document.getElementById("closePopup").addEventListener("click", function () {
+            document.getElementById("orderPopup").style.display = "none"; // Đóng pop-up
+        });
 
+        document.getElementById("submitOrder").addEventListener("click", function () {
+            const name = document.getElementById("name").value;
+            const address = document.getElementById("address").value;
+            const phone = document.getElementById("phone").value;
 
-        $(document).ready(function () {
-            $('#confirm-order').click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "confirm_orders.php",
-                    data: {},
-                    success: function (response) {
-                        $("#order-message").html("<div class='alert alert-success'>Order confirmed successfully.</div>");
-                        setTimeout(function () {
-                            $(".alert").hide();
-                        }, 1500);
+            // Kiểm tra thông tin đầu vào (có thể tùy chỉnh thêm)
+            if (name && address && phone) {
+
+                // Thực hiện xử lý gửi đơn hàng tại đây
+                const name = document.getElementById("name").value; // Lấy tên từ input
+                const address = document.getElementById("address").value; // Lấy địa chỉ từ input
+                const phone = document.getElementById("phone").value; // Lấy số điện thoại từ input
+
+                console.log("Order submitted:", { name, address, phone });
+
+                // Gửi yêu cầu đến backend 
+                fetch('../backend/confirm_orders.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    error: function () {
-                        $("#order-message").html("<div class='alert alert-danger'>There was an error confirming the order.</div>");
-                        setTimeout(function () {
-                            $(".alert").hide();
-                        }, 1500);
-                    }
-                });
-            });
+                    body: new URLSearchParams({
+                        name: name,
+                        address: address,
+                        phone: phone
+                    })
+                })
+                    .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
+                    .then(data => {
+                        // Xử lý phản hồi
+                        if (data.status === 'success') {
+                            console.log(data.message); // Hiển thị thông báo thành công
+                            // Bạn có thể điều hướng hoặc hiển thị thông báo trên giao diện người dùng
+                            $('#order-message').html("<div class='alert alert-success'>" + data.message + "</div>");
+                            setTimeout(function () {
+                                $(".alert").hide();
+                            }, 1500);
+                            setTimeout(function () {
+                                // Code muốn thực thi sau 3 giây
+                                window.location.reload();
+                            }, 3000);
+                        } else {
+                            console.error(data.message); // Hiển thị thông báo lỗi
+                            // Hiển thị thông báo lỗi cho người dùng
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                // Đóng pop-up sau khi gửi đơn hàng
+                document.getElementById("orderPopup").style.display = "none";
+            } else {
+                alert("Please fill in all fields."); // Thông báo nếu chưa điền đầy đủ
+            }
         });
+
+        // Đóng pop-up khi người dùng nhấp ra ngoài (optional)
+        window.onclick = function (event) {
+            const popup = document.getElementById("orderPopup");
+            if (event.target === popup) {
+                popup.style.display = "none";
+            }
+        };
     </script>
     <section id="about" style="margin-top: -164px;">
         <div class="container">
